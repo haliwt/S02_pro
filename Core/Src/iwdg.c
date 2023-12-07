@@ -38,7 +38,7 @@ void MX_IWDG_Init(void)
 
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_4;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_64; //  64* 4095 /32KHz = 8190ms = 8.19s
   hiwdg.Init.Window = 4095;
   hiwdg.Init.Reload = 4095;
   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
@@ -52,5 +52,9 @@ void MX_IWDG_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
+void iwdg_feed(void)
+{
+   HAL_IWDG_Refresh(&hiwdg);  /* ��װ�ؼ����� */
+}
 
 /* USER CODE END 1 */

@@ -73,14 +73,7 @@
 
 typedef struct _LCD_Ref{
 
-     uint8_t wifi_glint_flag;
-
-	 uint8_t gTimer_wifi_500ms;
-	 uint8_t gTimer_fan_10ms;
-    
-
-	 
-	 uint8_t number1_low;
+     uint8_t number1_low;
 	 uint8_t number1_high;
 	 uint8_t number2_low;
 	 uint8_t number2_high;
@@ -102,6 +95,8 @@ typedef struct _LCD_Ref{
 	 uint8_t number8_high;
 
 	 uint8_t  gTimer_colon_ms;
+	 uint8_t gTimer_fan_10ms;
+	 uint8_t gTimer_error_times;
 
 
 }lcd_ref;
@@ -110,12 +105,8 @@ typedef struct _LCD_Ref{
 
 extern lcd_ref lcd_t; 
 
-void DisplayPanel_TestHandler(void);
+void Lcd_Display_Detials(void)；
 
-void DisplayPanel_Ref_Handler(void);
-
-void TIM1723_Write_Cmd(uint8_t cmd);
-void LCD_Display_Wind_Icon_Handler(void);
 
 
 

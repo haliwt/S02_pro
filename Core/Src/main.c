@@ -26,7 +26,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +97,7 @@ int main(void)
   MX_TIM16_Init();
   MX_TIM17_Init();
   MX_USART2_UART_Init();
+  delay_init(24);
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -106,8 +107,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+    
     /* USER CODE BEGIN 3 */
+	 bsp_Idle();
   }
   /* USER CODE END 3 */
 }
