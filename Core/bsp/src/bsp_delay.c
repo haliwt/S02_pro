@@ -1,7 +1,7 @@
 #include "bsp_delay.h"
 
 static uint32_t g_fac_us = 0;       /* usÑÓÊ±±¶³ËÊý */
-bsp_ctl ctl_t;
+
 
 
 /**

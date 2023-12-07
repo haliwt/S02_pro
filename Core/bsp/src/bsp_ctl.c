@@ -95,7 +95,7 @@ uint8_t Plasma_Default_Handler(uint8_t idata)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Ultrasonic_state_Handeler(uint8_t(*ultrasonic_handler)(uint8_t idat))
+uint8_t Ultrasonic_state_Handler(uint8_t(*ultrasonic_handler)(uint8_t idat))
 {
 		ultrasonic_state = ultrasonic_handler;
 }
@@ -119,7 +119,7 @@ uint8_t Ultrasonic_Default_Handler(uint8_t idata)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Fan_state_Handeler(uint8_t(*fan_handler)(uint8_t idat))
+uint8_t Fan_state_Handler(uint8_t(*fan_handler)(uint8_t idat))
 {
 	fan_speed_state=  fan_handler;
 }

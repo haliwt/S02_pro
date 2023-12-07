@@ -13,8 +13,8 @@ lcd_ref lcd_t;
 #define DRY_Symbol              0x01  //addr 0xC9 ->T3 high word
 #define DRY_NO_Symbol           0x0
 
-#define KILL_Symbol             0x01  //addr 0xCA ->T4  high word
-#define KILL_NO_Symbol          0x0
+#define PLASMA_Symbol             0x01  //addr 0xCA ->T4  high word
+#define PLASMA_NO_Symbol          0x0
 
 #define BUG_Symbol            	0x01   //addr 0xCC ->T5 high word
 #define BUG_NO_Symbol         	0x0
@@ -169,8 +169,8 @@ static void LCD_Number_FiveSix_Hours(void);
 static void LCD_Number_SevenEight_Minutes(void);
 static void LCD_Fan_Icon(void);
 static uint8_t Detecting_Fault_Code(void);
-static LCD_Fault_Numbers_Code(void);
-static LCD_Timer_Colon_Flicker(void);
+static void LCD_Fault_Numbers_Code(void);
+static void LCD_Timer_Colon_Flicker(void);
 
 
 static uint8_t	ptc_error_flag ,fan_error_flag;
@@ -346,7 +346,7 @@ void LCD_Number_FiveSix_Hours(void)
 
   //judge icon 'dry' is on or off 
    static uint8_t ptc_symbol,plasma_symbol;
-   if(ptc_state()==open){
+   if(ptc_state(2)==open){
 
       ptc_symbol = 1;
      
@@ -355,7 +355,7 @@ void LCD_Number_FiveSix_Hours(void)
      ptc_symbol = 0;
    }
 
-   if(plasma_state() == open){
+   if(plasma_state(1) == open){
       plasma_symbol =1;
    }
    else{
@@ -383,7 +383,7 @@ static void LCD_Number_SevenEight_Minutes(void)
   static uint8_t ultrasonic_symbol;
 
      LCD_Timer_Colon_Flicker();
-     if(ultrasonic_state() == open){
+     if(ultrasonic_state(1) == open){
 
 	     ultrasonic_symbol =1;
 
@@ -414,7 +414,7 @@ static uint8_t Detecting_Fault_Code(void)
 {
   
 
-     if(ptc_error_state() == fault){
+     if(ptc_error_state(1) == error){
 		  ptc_error_flag = 1;
 	 }
 	 else{
@@ -422,7 +422,7 @@ static uint8_t Detecting_Fault_Code(void)
 	
 	 }
 	
-	 if(fan_error_state()== falut){
+	 if(fan_error_state(1)== error){
 		fan_error_flag =1;
 
 	 }
@@ -442,16 +442,16 @@ static uint8_t Detecting_Fault_Code(void)
 
 }
 
-static LCD_Fault_Numbers_Code(void)
+static void LCD_Fault_Numbers_Code(void)
 {
 
  LCD_Timer_Colon_Flicker();
  
  // display "E"
- TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[lcd_t.number1_high] + lcdNumber5_Low[lcd_t.number1_low] + ptc_symbol ) & 0xff); //numbers : '3' addr: 0xC2
+ TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[lcd_t.number1_high] + lcdNumber5_Low[lcd_t.number1_low] + DRY_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //display 'r' 
- TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[lcd_t.number1_high] + lcdNumber6_Low[lcd_t.number1_low] + plasma_symbol) & 0xff); //numbers : '4' 
+ TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[lcd_t.number1_high] + lcdNumber6_Low[lcd_t.number1_low] + PLASMA_Symbol) & 0xff); //numbers : '4' 
 
  //display error code "01"--ptc_warning , "02"--fan_warning
 
@@ -532,11 +532,11 @@ static void LCD_Fan_Icon(void)
  * Return Ref:
  * 
 *****************************************************************************/
-static LCD_Timer_Colon_Flicker(void)
+static void LCD_Timer_Colon_Flicker(void)
 {
    if(lcd_t.gTimer_colon_ms < 0){
 
-        Colon_Symbol = 0x01
+        Colon_Symbol = 0x01;
    }
    else if(lcd_t.gTimer_colon_ms >0 && lcd_t.gTimer_colon_ms < 2){
 

@@ -88,15 +88,22 @@ void Error_Handler(void);
 
 #define KEY_POWER_Pin 						GPIO_PIN_15
 #define KEY_POWER_GPIO_Port 				GPIOA
+#define KEY_POWER_EXTI_IRQn 				EXTI4_15_IRQn
 
 #define KEY_MODE_Pin 						GPIO_PIN_0
 #define KEY_MODE_GPIO_Port 					GPIOD
+#define KEY_MODE_EXTI_IRQn 					EXTI0_1_IRQn
 
 #define KEY_UP_Pin 							GPIO_PIN_1
 #define KEY_UP_GPIO_Port 					GPIOD
+#define KEY_UP_EXTI_IRQn 					EXTI0_1_IRQn
 
 #define KEY_DOWN_Pin 						GPIO_PIN_2
 #define KEY_DOWN_GPIO_Port 					GPIOD
+#define KEY_DOWN_EXTI_IRQn 					EXTI2_3_IRQn
+
+
+//end key input GPIO
 
 #define POWER_LED_Pin GPIO_PIN_3
 #define POWER_LED_GPIO_Port GPIOD

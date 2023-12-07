@@ -5,16 +5,16 @@
 
 typedef enum{
 
-   uint8_t open,
-   uint8_t close
+   open,
+   close
   
 }hard_state;
 
 
 typedef enum{
 
-   uint8_t good,
-   uint8_t error
+   good,
+   error
 
 }hard_error_state;
 

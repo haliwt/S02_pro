@@ -98,6 +98,7 @@ int main(void)
   MX_TIM17_Init();
   MX_USART2_UART_Init();
   delay_init(24);
+  bsp_ctl_init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

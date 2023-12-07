@@ -105,7 +105,7 @@ typedef struct _LCD_Ref{
 
 extern lcd_ref lcd_t; 
 
-void Lcd_Display_Detials(void)；
+void Lcd_Display_Detials(void);
 
 
 
