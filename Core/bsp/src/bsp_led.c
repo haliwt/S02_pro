@@ -4,6 +4,9 @@
 
 
 static void LED_POWER_OFF(void);
+static void Delay(int16_t count);
+
+volatile uint32_t led_k,led_i;
 
 
 void LED_Power_On(void)
@@ -17,6 +20,36 @@ void LED_POWER_OFF(void)
 	LED_POWER_KEY_SetLow() ;
 }
 
+void LED_Mode_On(void)
+{
+  LED_MODE_SetHigh();	
+
+}
+void LED_Mode_Off(void)
+{
+
+	LED_MODE_SetLow()	;
+
+
+}
+
+
+static void Delay(int16_t count)
+{
+   
+    if(count ==0 || count <0){
+       return;
+    
+    }
+    else{
+    while(count){
+
+       count--;
+   }
+   }
+
+}
+
 
 /***************************************************************
 *
@@ -28,6 +61,7 @@ void LED_POWER_OFF(void)
 **************************************************************/
 void Breath_Led(void)
 {
+   {
     static uint32_t i,j;
     led_k++;
 
@@ -75,6 +109,21 @@ void Breath_Led(void)
 	
 
 }
+	
+
+}
 
 
+void Backlight_On(void)
+{
+	BACKLIGHT_SetHigh();
+
+}
+void Backlight_Off(void)
+{
+
+	BACKLIGHT_SetLow();
+
+
+}
 

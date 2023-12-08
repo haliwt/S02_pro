@@ -47,25 +47,25 @@ extern uint8_t (*fan_error_state)(void);
 void bsp_ctl_init(void);
 
 
-uint8_t Ptc_State_Handler( uint8_t (*ptc_handler)(void));
-uint8_t Plasma_State_Handler(uint8_t(*plasma_handler)(void));
-uint8_t Ultrasonic_state_Handler(uint8_t(*ultrasonic_handler)(void));
-uint8_t Fan_state_Handler(uint8_t(*fan_handler)(void));
+void Ptc_State_Handler( uint8_t (*ptc_handler)(void));
+void  Plasma_State_Handler(uint8_t(*plasma_handler)(void));
+void  Ultrasonic_state_Handler(uint8_t(*ultrasonic_handler)(void));
+void  Fan_state_Handler(uint8_t(*fan_handler)(void));
 
-uint8_t Ptc_error_state_Handler(uint8_t(*error_handler)(void));
-uint8_t Fan_error_state_Handler(uint8_t(*fan_error_handler)(void));
-
-
+void  Ptc_error_state_Handler(uint8_t(*error_handler)(void));
+void  Fan_error_state_Handler(uint8_t(*fan_error_handler)(void));
 
 
-uint8_t Ptc_Default_Handler(uint8_t idata);
-uint8_t Plasma_Default_Handler(uint8_t idata);
-uint8_t Ultrasonic_Default_Handler(uint8_t idata);
-uint8_t Fan_Default_Handler(uint8_t idata);
 
-uint8_t Ptc_Error_Default_Handler(uint8_t idata);
 
-uint8_t Fan_Error_Default_Handler(uint8_t fan_error);
+uint8_t Ptc_Default_Handler(void);
+uint8_t Plasma_Default_Handler(void);
+uint8_t Ultrasonic_Default_Handler(void);
+uint8_t Fan_Default_Handler(void);
+
+uint8_t Ptc_Error_Default_Handler(void);
+
+uint8_t Fan_Error_Default_Handler(void);
 
 
 

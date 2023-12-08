@@ -276,7 +276,7 @@ void Lcd_Display_Detials(void)
  }
 
    /* fan of degree numbers*/
-   LCD_Fan_Icon();
+   LCD_Wind_Icon();
 
 
    //open display
@@ -332,7 +332,7 @@ void LCD_Number_FiveSix_Hours(void)
 
   //judge icon 'dry' is on or off 
    static uint8_t ptc_symbol,plasma_symbol;
-   if(ptc_state(2)==open){
+   if(ptc_state()==open){
 
       ptc_symbol = 1;
      
@@ -341,7 +341,7 @@ void LCD_Number_FiveSix_Hours(void)
      ptc_symbol = 0;
    }
 
-   if(plasma_state(1) == open){
+   if(plasma_state() == open){
       plasma_symbol =1;
    }
    else{
@@ -369,7 +369,7 @@ static void LCD_Number_SevenEight_Minutes(void)
   static uint8_t ultrasonic_symbol;
 
      LCD_Timer_Colon_Flicker();
-     if(ultrasonic_state(1) == open){
+     if(ultrasonic_state() == open){
 
 	     ultrasonic_symbol =1;
 
@@ -400,7 +400,7 @@ static uint8_t Detecting_Fault_Code(void)
 {
   
 
-     if(ptc_error_state(1) == error){
+     if(ptc_error_state() == error){
 		  ptc_error_flag = 1;
 	 }
 	 else{
@@ -408,7 +408,7 @@ static uint8_t Detecting_Fault_Code(void)
 	
 	 }
 	
-	 if(fan_error_state(1)== error){
+	 if(fan_error_state()== error){
 		fan_error_flag =1;
 
 	 }
@@ -441,10 +441,10 @@ static void LCD_Fault_Numbers_Code(void)
  LCD_Timer_Colon_Flicker();
  
  // display "E"
- TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[glcd_t.number1_high] + lcdNumber5_Low[glcd_t.number1_low] + DRY_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+ TM1723_Write_Display_Data(0xC9,(lcdNumber5_Low_E[0]  + lcdNumber5_High_E[0] + DRY_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //display 'r' 
- TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[glcd_t.number1_high] + lcdNumber6_Low[glcd_t.number1_low] + PLASMA_Symbol) & 0xff); //numbers : '4' 
+ TM1723_Write_Display_Data(0xCA,(lcdNumber6_Low_r[0] + lcdNumber6_High_r[0] + PLASMA_Symbol) & 0xff); //numbers : '4' 
 
  //display error code "01"--ptc_warning , "02"--fan_warning
 
@@ -525,7 +525,7 @@ static void LCD_Wind_Icon(void)
 *****************************************************************************/
 static void LCD_Timer_Colon_Flicker(void)
 {
-   if(glcd_t.gTimer_colon_ms < 0){
+   if(glcd_t.gTimer_colon_ms < 1){
 
         Colon_Symbol = 0x01;
    }

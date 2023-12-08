@@ -13,7 +13,7 @@
 void Fan_Run(void);
 
  
-void Fan_Stop(void)
+void Fan_Stop(void);
 
 
 

@@ -38,6 +38,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         gProcess_t.gTimer_run_display ++;
 		gProcess_t.gTimer_run_one_mintue ++;
 		gkey_t.gTimer_power_off++;
+		
 		if(tm2 > 59){ //60s = 1 minutes
 			tm2 =0;
 			gProcess_t.gTimer_run_total++;

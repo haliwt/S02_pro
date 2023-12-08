@@ -38,20 +38,12 @@ void bsp_ctl_init(void)
  * Return Ref:
  * 
 *****************************************************************************/
-uint8_t Ptc_State_Handler( uint8_t (*ptc_handler)(void))
+void Ptc_State_Handler( uint8_t (*ptc_handler)(void))
 {
    	ptc_state = ptc_handler ;
-
+    
 }
 
-/*****************************************************************************
- * 
- * Function Name: void Ptc_Default_Handler(void)
- * Function:
- * Input Ref: idata is ptc is open "1" or "0"  close 
- * Return Ref: close or open 
- * 
-*****************************************************************************/
 uint8_t Ptc_Default_Handler(void)
 {
     if(gctl_t.ptc_flag == 1){
@@ -72,7 +64,7 @@ uint8_t Ptc_Default_Handler(void)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Plasma_State_Handler(uint8_t(*plasma_handler)(void))
+void Plasma_State_Handler(uint8_t(*plasma_handler)(void))
 {
 	 plasma_state = plasma_handler;
 
@@ -100,7 +92,7 @@ uint8_t Plasma_Default_Handler(void)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Ultrasonic_state_Handler(uint8_t(*ultrasonic_handler)(void))
+void  Ultrasonic_state_Handler(uint8_t(*ultrasonic_handler)(void))
 {
 		ultrasonic_state = ultrasonic_handler;
 }
@@ -116,10 +108,7 @@ uint8_t Ultrasonic_Default_Handler(void)
 
 	}
 	
-
-	
 }
-
 /*****************************************************************************
  * 
  * Function Name: uint8_t Error_state_Handeler(uint8_t(*error_handler)(uint8_t idat))
@@ -128,7 +117,7 @@ uint8_t Ultrasonic_Default_Handler(void)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Ptc_error_state_Handler(uint8_t(*ptc_error_handler)(void))
+void  Ptc_error_state_Handler(uint8_t(*ptc_error_handler)(void))
 {
       ptc_error_state = ptc_error_handler;
 }
@@ -155,7 +144,7 @@ uint8_t Ptc_Error_Default_Handler(void)
  * Return Ref: close or open 
  * 
 *****************************************************************************/
-uint8_t Fan_error_state_Handler(uint8_t(*fan_error_handler)(void))
+void Fan_error_state_Handler(uint8_t(*fan_error_handler)(void))
 {
       fan_error_state = fan_error_handler;
 }

@@ -63,7 +63,7 @@ void mainboard_process_handler(void)
 	    step_process=0;
 	    LED_Mode_Off();
 	   
-	    Breath_Led();
+	   
         Ptc_Off();
 		Ultrasonic_Pwm_Stop();
 		Plasma_Off();
@@ -84,15 +84,8 @@ void mainboard_process_handler(void)
 
 		}
 
-		if( first_power_up ==0){
-
-		  Fan_Stop();
-		  Backlight_Off();
-		  Lcd_Display_Off();
-
-
-		}
-
+		
+        Breath_Led();
 
 	  break;
 

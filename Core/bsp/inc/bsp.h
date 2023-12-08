@@ -15,8 +15,8 @@
 #include "bsp_ultrasonic.h"
 #include "bsp_delay.h"
 #include "bsp_ctl.h"
-//#include "bsp_fan.h"
-
+#include "bsp_fan.h"
+#include "bsp_plasma.h"
 #include "bsp_ptc.h"
 
 
