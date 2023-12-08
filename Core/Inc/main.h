@@ -66,8 +66,8 @@ void Error_Handler(void);
 #define PLASMA_Pin 							GPIO_PIN_5
 #define PLASMA_GPIO_Port 					GPIOA
 
-#define FAN_PWM_Pin 						GPIO_PIN_6
-#define FAN_PWM_GPIO_Port 					GPIOA
+#define FAN_OUT_Pin 						GPIO_PIN_6
+#define FAN_OUT_GPIO_Port 					GPIOA
 
 #define FAN_COMM_Pin 						GPIO_PIN_7
 #define FAN_COMM_GPIO_Port 					GPIOA
@@ -78,7 +78,7 @@ void Error_Handler(void);
 #define BEEP_PWM_Pin 						GPIO_PIN_1
 #define BEEP_PWM_GPIO_Port 					GPIOB
 
-#define TEMP_Pin 							GPIO_PIN_13
+#define TEMP_Pin 							    GPIO_PIN_13
 #define TEMP_GPIO_Port 						GPIOB
 
 #define ULTRA_PWM_Pin 						GPIO_PIN_8
@@ -104,9 +104,9 @@ void Error_Handler(void);
 
 
 //end key input GPIO
-
-#define POWER_LED_Pin GPIO_PIN_3
-#define POWER_LED_GPIO_Port GPIOD
+//display board of key of led 
+#define POWER_LED_Pin           GPIO_PIN_3
+#define POWER_LED_GPIO_Port     GPIOD
 
 #define LED_CTL_Pin GPIO_PIN_3
 #define LED_CTL_GPIO_Port GPIOB

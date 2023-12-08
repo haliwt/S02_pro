@@ -79,6 +79,7 @@ typedef struct _LCD_Ref{
 	 uint8_t number2_high;
 	 uint8_t number3_low;
 	 uint8_t number3_high;
+	 
 	 uint8_t number4_low;
 	 uint8_t number4_high;
 	 
@@ -103,12 +104,14 @@ typedef struct _LCD_Ref{
 
 
 
-extern lcd_ref lcd_t; 
+extern lcd_ref glcd_t; 
 
 void Lcd_Display_Detials(void);
 
+void LCD_Display_Wind_Icon_Handler(void);
 
 
+void Lcd_Display_Off(void);
 
 
 #endif 

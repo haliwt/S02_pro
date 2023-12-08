@@ -1,7 +1,7 @@
 #include "bsp_lcd.h"
 #include "bsp.h"
 
-lcd_ref lcd_t; 
+lcd_ref glcd_t; 
 
 
 #define WIFI_Symbol     		0x01 //addr 0xC5 -high word
@@ -68,21 +68,7 @@ lcd_ref lcd_t;
 #define seg_d              0x80
 
 
-
-
 #define LUM_VALUE       0x94//0x92//0x93//0x95//0x94//0x97(max)
-
-
-
-
-
-
-
-
-
-
-
-
 
 const unsigned char segNumber_Low[]={
  
@@ -154,7 +140,7 @@ static const uint8_t lcdNumber6_High_r[] ={0x0};
 
 
 
-lcd_ref lcd_t; 
+lcd_ref glcd_t; 
 
 static void TM1723_Start(void);
 static void TM1723_Stop(void);
@@ -167,7 +153,7 @@ static void LCD_Number_OneTwo_Humidity(void);
 static void LCD_Number_ThreeFour_Temperature(void);
 static void LCD_Number_FiveSix_Hours(void);
 static void LCD_Number_SevenEight_Minutes(void);
-static void LCD_Fan_Icon(void);
+static void LCD_Wind_Icon(void);
 static uint8_t Detecting_Fault_Code(void);
 static void LCD_Fault_Numbers_Code(void);
 static void LCD_Timer_Colon_Flicker(void);
@@ -310,10 +296,10 @@ void Lcd_Display_Detials(void)
 void LCD_Number_OneTwo_Humidity(void)
 {
    //number '1'
-  TM1723_Write_Display_Data(0xC4,(lcdNumber1_High[lcd_t.number1_high] + lcdNumber1_Low[lcd_t.number1_low]) & 0xff); //numbers : '1' addr: 0xC4
+  TM1723_Write_Display_Data(0xC4,(lcdNumber1_High[glcd_t.number1_high] + lcdNumber1_Low[glcd_t.number1_low]) & 0xff); //numbers : '1' addr: 0xC4
 
   //number '2'
-  TM1723_Write_Display_Data(0xC5,(lcdNumber2_High[lcd_t.number1_high] + lcdNumber2_Low[lcd_t.number1_low]) & 0xff); //numbers : '2' addr: 0xC5
+  TM1723_Write_Display_Data(0xC5,(lcdNumber2_High[glcd_t.number1_high] + lcdNumber2_Low[glcd_t.number1_low]) & 0xff); //numbers : '2' addr: 0xC5
 }
 /*****************************************************************************
  * 
@@ -326,10 +312,10 @@ void LCD_Number_OneTwo_Humidity(void)
 void LCD_Number_ThreeFour_Temperature(void)
 {
   //number '3' 
-  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[lcd_t.number1_high] + lcdNumber3_Low[lcd_t.number1_low] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[glcd_t.number1_high] + lcdNumber3_Low[glcd_t.number1_low] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //number '4' 
- TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[lcd_t.number1_high] + lcdNumber4_Low[lcd_t.number1_low] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
+ TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[glcd_t.number1_high] + lcdNumber4_Low[glcd_t.number1_low] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
 
 
 }
@@ -362,10 +348,10 @@ void LCD_Number_FiveSix_Hours(void)
 	  plasma_symbol = 0;
    }
   //number '5' 
-  TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[lcd_t.number1_high] + lcdNumber5_Low[lcd_t.number1_low] + ptc_symbol ) & 0xff); //numbers : '3' addr: 0xC2
+  TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[glcd_t.number1_high] + lcdNumber5_Low[glcd_t.number1_low] + ptc_symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //number '6' 
- TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[lcd_t.number1_high] + lcdNumber6_Low[lcd_t.number1_low] + plasma_symbol) & 0xff); //numbers : '4' 
+ TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[glcd_t.number1_high] + lcdNumber6_Low[glcd_t.number1_low] + plasma_symbol) & 0xff); //numbers : '4' 
 
 }
 
@@ -395,10 +381,10 @@ static void LCD_Number_SevenEight_Minutes(void)
 	  }
 
 	   //number '7' ":"
-	  TM1723_Write_Display_Data(0xCB,(lcdNumber7_High[lcd_t.number1_high] + lcdNumber7_Low[lcd_t.number1_low] + Colon_Symbol ) & 0xff); //numbers : '1' addr: 0xC4
+	  TM1723_Write_Display_Data(0xCB,(lcdNumber7_High[glcd_t.number1_high] + lcdNumber7_Low[glcd_t.number1_low] + Colon_Symbol ) & 0xff); //numbers : '1' addr: 0xC4
 
 	  //number '8'
-	  TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[lcd_t.number1_high] + lcdNumber8_Low[lcd_t.number1_low] + ultrasonic_symbol) & 0xff); //numbers : '2' addr: 0xC
+	  TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[glcd_t.number1_high] + lcdNumber8_Low[glcd_t.number1_low] + ultrasonic_symbol) & 0xff); //numbers : '2' addr: 0xC
 
 }
 
@@ -441,17 +427,24 @@ static uint8_t Detecting_Fault_Code(void)
 	 
 
 }
-
+/*************************************************************************************
+	*
+	*Function Name: LCD_Fault_Numbers_Code(void)
+	*Function : display error of code
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*************************************************************************************/
 static void LCD_Fault_Numbers_Code(void)
 {
 
  LCD_Timer_Colon_Flicker();
  
  // display "E"
- TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[lcd_t.number1_high] + lcdNumber5_Low[lcd_t.number1_low] + DRY_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+ TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[glcd_t.number1_high] + lcdNumber5_Low[glcd_t.number1_low] + DRY_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //display 'r' 
- TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[lcd_t.number1_high] + lcdNumber6_Low[lcd_t.number1_low] + PLASMA_Symbol) & 0xff); //numbers : '4' 
+ TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[glcd_t.number1_high] + lcdNumber6_Low[glcd_t.number1_low] + PLASMA_Symbol) & 0xff); //numbers : '4' 
 
  //display error code "01"--ptc_warning , "02"--fan_warning
 
@@ -461,7 +454,7 @@ static void LCD_Fault_Numbers_Code(void)
   //number '1' or '2'
  
   //"01" or "o2" blink
-  if(lcd_t.gTimer_error_times < 1){
+  if(glcd_t.gTimer_error_times < 1){
   	if(ptc_error_flag ==1){ 
     	TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[1] + lcdNumber8_Low[1] +BUG_Symbol) & 0xff); //numbers : '2' addr: 0xC
   	 }
@@ -473,7 +466,7 @@ static void LCD_Fault_Numbers_Code(void)
 
 	 }
   }
-  else if(lcd_t.gTimer_error_times > 0 && lcd_t.gTimer_error_times < 2){
+  else if(glcd_t.gTimer_error_times > 0 && glcd_t.gTimer_error_times < 2){
 
    if(fan_error_flag ==1 && ptc_error_flag ==1 ){
   	  TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[2] + lcdNumber8_Low[2] +BUG_Symbol) & 0xff); //numbers : '2' addr: 0xC
@@ -486,8 +479,8 @@ static void LCD_Fault_Numbers_Code(void)
       
    }
   }
-  else if(lcd_t.gTimer_error_times ==2 || lcd_t.gTimer_error_times > 2){
-      lcd_t.gTimer_error_times =0;
+  else if(glcd_t.gTimer_error_times ==2 || glcd_t.gTimer_error_times > 2){
+      glcd_t.gTimer_error_times =0;
 
   }
  
@@ -502,24 +495,22 @@ static void LCD_Fault_Numbers_Code(void)
  * Return Ref:
  * 
 *****************************************************************************/
-static void LCD_Fan_Icon(void)
+static void LCD_Wind_Icon(void)
 {
 
-
-
-	if(lcd_t.gTimer_fan_10ms >9 && lcd_t.gTimer_fan_10ms<20){ //open 
+   if(glcd_t.gTimer_fan_10ms >9 && glcd_t.gTimer_fan_10ms<20){ //open 
 		
 	   TM1723_Write_Display_Data(0xCE,T16_WIND_SPEED_ONE+T17_WIND_SPEED_TWO+T15+T9+T13);//display  wind icon
 	   TM1723_Write_Display_Data(0xCF,T18_WIND_SPEED_FULL+T11);//display  wind icon	
 	}
-    else if(lcd_t.gTimer_fan_10ms <10){ //close
+    else if(glcd_t.gTimer_fan_10ms <10){ //close
 		
 	   TM1723_Write_Display_Data(0xCE,T16_WIND_SPEED_ONE+T17_WIND_SPEED_TWO+T15 +T10+T12+T14 );//display  wind icon
 	   TM1723_Write_Display_Data(0xCF,T18_WIND_SPEED_FULL);//display  wind icon	
 
 	}
-	else if(lcd_t.gTimer_fan_10ms > 19){
-		lcd_t.gTimer_fan_10ms=0;
+	else if(glcd_t.gTimer_fan_10ms > 19){
+		glcd_t.gTimer_fan_10ms=0;
 	}
 	  
 }
@@ -534,20 +525,63 @@ static void LCD_Fan_Icon(void)
 *****************************************************************************/
 static void LCD_Timer_Colon_Flicker(void)
 {
-   if(lcd_t.gTimer_colon_ms < 0){
+   if(glcd_t.gTimer_colon_ms < 0){
 
         Colon_Symbol = 0x01;
    }
-   else if(lcd_t.gTimer_colon_ms >0 && lcd_t.gTimer_colon_ms < 2){
+   else if(glcd_t.gTimer_colon_ms >0 && glcd_t.gTimer_colon_ms < 2){
 
       Colon_Symbol = 0x0;
 
    }
-   else if(lcd_t.gTimer_colon_ms ==2 || lcd_t.gTimer_colon_ms >2){
+   else if(glcd_t.gTimer_colon_ms ==2 || glcd_t.gTimer_colon_ms >2){
 
-      lcd_t.gTimer_colon_ms =0;
+      glcd_t.gTimer_colon_ms =0;
 
    }
+
+}
+
+/*************************************************************************************
+	*
+	*Function Name: static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)
+	*Function : display wind icon
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*************************************************************************************/
+void LCD_Display_Wind_Icon_Handler(void)
+{
+		TIM1723_Write_Cmd(0x00);
+		TIM1723_Write_Cmd(0x40);
+		TIM1723_Write_Cmd(0x44);
+
+		TM1723_Write_Display_Data(0xC2,0x0);
+		TM1723_Write_Display_Data(0xC3,0x0);
+		TM1723_Write_Display_Data(0xC4,0x0);
+		TM1723_Write_Display_Data(0xC5,0x0);
+		TM1723_Write_Display_Data(0xC9,0x0);
+		TM1723_Write_Display_Data(0xCA,0x0);
+		TM1723_Write_Display_Data(0xCB,0x0);
+		TM1723_Write_Display_Data(0xCC,0x0);
+
+
+	//open display
+	 TIM1723_Write_Cmd(LUM_VALUE);//(0x9B);
+
+}
+/*************************************************************************************
+	*
+	*Function Name: void Lcd_Display_Off(void)
+	*Function : don't display any one
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+*************************************************************************************/
+void Lcd_Display_Off(void)
+{
+
+	 TIM1723_Write_Cmd(CloseDispTM1723);//(0x80);
 
 }
 

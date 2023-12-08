@@ -91,11 +91,10 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_IWDG_Init();
-  MX_TIM1_Init();
-  MX_TIM3_Init();
-  MX_TIM14_Init();
-  MX_TIM16_Init();
-  MX_TIM17_Init();
+  MX_TIM1_Init(); //ultrasonic
+  MX_TIM14_Init(); //beep pwm
+
+  MX_TIM17_Init(); //timer timing 
   MX_USART2_UART_Init();
   delay_init(24);
   bsp_ctl_init();
@@ -111,6 +110,7 @@ int main(void)
     
     /* USER CODE BEGIN 3 */
 	 bsp_Idle();
+	 mainboard_process_handler();
   }
   /* USER CODE END 3 */
 }

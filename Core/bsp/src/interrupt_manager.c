@@ -10,32 +10,41 @@
 *******************************************************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  static uint8_t tm0,tm1;
+  static uint8_t tm0,tm1,tm2;
     
    if(htim->Instance==TIM17){
     
     tm0++;  //10ms
 	tm1++;
+    gProcess_t.gTimer_run_display++;
  
     
-	lcd_t.gTimer_fan_10ms++;
+	glcd_t.gTimer_fan_10ms++;
 	
     if(tm1>9){ //10*10 = 100ms 
        tm1=0;
-       lcd_t.gTimer_colon_ms++ ;
+       glcd_t.gTimer_colon_ms++ ;
 	  
     }
 
     if(tm0>99){ //100 *10ms = 1000ms = 1s
 		tm0=0;
+		tm2++;
 		
-		lcd_t.gTimer_error_times++;
-	    ctl_t.gTimer_prcoess_iwdg++;
-		
-		 
-		
-		
-	  }
+		glcd_t.gTimer_error_times++;
+	    gctl_t.gTimer_prcoess_iwdg++;
+		gProcess_t.gTimer_run_adc++ ;
+		gProcess_t.gTimer_run_dht11++;
+        gProcess_t.gTimer_run_display ++;
+		gProcess_t.gTimer_run_one_mintue ++;
+		gkey_t.gTimer_power_off++;
+		if(tm2 > 59){ //60s = 1 minutes
+			tm2 =0;
+			gProcess_t.gTimer_run_total++;
+			gProcess_t.gTimer_run_time_out ++ ;
+
+		}
+	}
 	
    }
 
