@@ -63,8 +63,8 @@ void mainboard_process_handler(void)
 	    step_process=0;
 	    LED_Mode_Off();
 	   
-	    Breath_Led()
-
+	    Breath_Led();
+        Ptc_Off();
 		Ultrasonic_Pwm_Stop();
 		Plasma_Off();
 	
@@ -276,9 +276,11 @@ static uint8_t Works_Time_Out(void)
 */
 static void Mainboard_Action_Fun(void)
 {
-    Ultrasonic_Pwm_Output();
+    Ptc_On();
+	Ultrasonic_Pwm_Output();
 	Fan_Run();
 	Plasma_On();
+	
 	
 }
 
@@ -293,6 +295,8 @@ static void Mainboard_Action_Fun(void)
 */
 static void Mainboard_Fun_Stop(void)
 {
+   Ptc_Off();
+
    Ultrasonic_Pwm_Stop();
    Fan_Stop();
    Plasma_Off();

@@ -1,7 +1,8 @@
-#ifndef  __BSP_H_
-#define __BSP_H_
+#ifndef  	__BSP_H_
+#define 	__BSP_H_
 #include "main.h"
 
+#include "interrupt_manager.h"
 #include "adc.h"
 #include "iwdg.h"
 #include "tim.h"
@@ -14,11 +15,12 @@
 #include "bsp_ultrasonic.h"
 #include "bsp_delay.h"
 #include "bsp_ctl.h"
-#include "bsp_fan.h"
-#include "interrupt_manager.h"
+//#include "bsp_fan.h"
+
+#include "bsp_ptc.h"
 
 
-typedef struct{
+typedef struct {
 
 
    uint8_t gTimer_run_adc;

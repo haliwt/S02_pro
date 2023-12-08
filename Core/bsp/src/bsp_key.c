@@ -46,7 +46,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
       }
       else{
 
-         gkey_t.key_mode = mode_confirm；
+         gkey_t.key_mode = mode_confirm;
          key_mode_change = 0;
       }
    }
@@ -57,10 +57,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
        if(gkey_t.key_power == power_on){
 	   	
         gkey_t.key_sound_flag = key_sound;
-		if(run_t.ptc_warning ==0){
-			
-
-         switch(key_mode_change){
+		  switch(key_mode_change){
 
 		    case 0:  //set temperature value 
             set_up_temperature_value ++;
@@ -123,7 +120,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
                  gkey_t.gTimer_set_timer =0;
             }
-         }
+         
        }
    break;
 

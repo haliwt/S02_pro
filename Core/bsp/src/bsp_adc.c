@@ -56,24 +56,21 @@ static uint16_t Get_Adc_Average(uint32_t ch,uint8_t times)
 
 void Get_PTC_Temperature_Voltage(uint32_t channel,uint8_t times)
 {
- 
+    uint16_t adcx,ptc_temp_voltage;
 	
 	adcx = Get_Adc_Average(channel,times);
 
-    run_t.ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
+    ptc_temp_voltage  =(uint16_t)((adcx * 3300)/4096); //amplification 100 ,3.11V -> 311
 
-	if(run_t.open_ptc_detected_flag == 0){ //power on the voltage is small 
-         run_t.open_ptc_detected_flag++ ;
-         run_t.ptc_temp_voltage = 500;
-    }
+
 	#ifdef DEBUG
       printf("ptc= %d",run_t.ptc_temp_voltage);
 	#endif 
 
-	if(run_t.ptc_temp_voltage < 373 || run_t.ptc_temp_voltage ==373){ //87 degree
+	if(ptc_temp_voltage < 373 || ptc_temp_voltage ==373){ //87 degree
   
 	    gctl_t.plasma_flag = 0; //turn off
-	    PTC_SetLow(); //turn off
+	    Ptc_On(); //turn off
         Buzzer_Ptc_Error_Sound();
    	      
    }
