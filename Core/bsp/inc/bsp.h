@@ -40,6 +40,8 @@ typedef struct {
    uint8_t gTimer_works_counter;
    uint8_t gTimer_display_works_hours;
    uint8_t gTimer_display_works_minutes;
+   uint8_t gTimer_timer_Counter;
+   uint8_t gTimer_set_timer ;
 
 
 }BSP_process_t;

@@ -105,10 +105,6 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 					}
 						
 			     }
-
-           
-              
-            
                   //display hours
                   glcd_t.number5_low =  gProcess_t.set_timer_timing_hours / 10 ;
                   glcd_t.number5_high =  gProcess_t.set_timer_timing_hours / 10 ;

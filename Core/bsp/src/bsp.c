@@ -7,6 +7,9 @@ static void Mainboard_Action_Fun(void);
 static void Mainboard_Fun_Stop(void);
 static void Process_Dynamical_Action(void);
 static void Display_Works_Timing(void);
+static void Set_Timer_Timing_Lcd_Blink(void );
+
+static void Display_Timer_Timing(int8_t hours,int8_t minutes);
 
 
 
@@ -53,7 +56,8 @@ void bsp_Idle(void)
 void mainboard_process_handler(void)
 {
     static uint8_t step_process,first_power_up, compare_temp_value, compare_temp_value_flag;
-	static uint8_t  timer_timing_flag;
+	static uint8_t  timer_timing_flag,set_timer_hours,set_timer_minutes;
+	
 
 	if( gkey_t.key_sound_flag == key_sound){
 		gkey_t.key_sound_flag =0;
@@ -66,7 +70,8 @@ void mainboard_process_handler(void)
       case power_off:
 
 	    step_process=0;
-		compare_temp_value_flag =0;
+		compare_temp_value_flag =0; //关闭ptc温度设置的值
+	    timer_timing_flag = 0 ; //关闭定时标志位，取消定时功能
 	    LED_Mode_Off();
 	   
 	   
@@ -122,7 +127,7 @@ void mainboard_process_handler(void)
 
 		  break;
 
-		   case 1: //run display
+		   case 1: // normal all content display
           
 		    if(gProcess_t.gTimer_run_display > 30){ //30*10 =300ms flash
 			    gProcess_t.gTimer_run_display=0;
@@ -143,7 +148,7 @@ void mainboard_process_handler(void)
                  gkey_t.key_select = 0;
 				 compare_temp_value = gkey_t.set_temp_value;
 				 //lcd digitall '3''4' blink
-				 gProcess_t.set_temp_confirm = 1;
+				 gProcess_t.set_temp_confirm = 1; //set_temperature vale blink is three times 
 				 compare_temp_value_flag=1;
                  gkey_t.gTimer_key_temp_timing = 0;
 			}
@@ -186,7 +191,9 @@ void mainboard_process_handler(void)
 		  case 3: //set timer timing value 
                if(gkey_t.key_mode == mode_set_timer){
 			   	
-			   	   if(gkey_t.gTimer_set_timer > 3){
+                   Set_Timer_Timing_Lcd_Blink();
+
+				   if(gkey_t.gTimer_set_timer > 3){
 
                        gkey_t.key_mode=0;
 					   gkey_t.key_mode_times=0;
@@ -195,12 +202,25 @@ void mainboard_process_handler(void)
 
 			   }
 			   else if(gkey_t.key_mode == mode_confirm){
-			   	     timer_timing_flag = 1;
+
+			       if(gProcess_t.set_timer_timing_hours ==0 && gProcess_t.set_timer_timing_minutes==0 ){
+			   	     timer_timing_flag = 0;
+					 gkey_t.key_mode =0;
+
+			       	}
+				    else{
+					  timer_timing_flag = 1;
+					  gkey_t.key_mode =0;
+					  set_timer_hours=gProcess_t.set_timer_timing_hours;
+					  set_timer_minutes=gProcess_t.set_timer_timing_minutes;
+					  gProcess_t.gTimer_timer_Counter=0;
+
+					}
 			   	
 
 			   }
 			   else if(timer_timing_flag == 1){
-
+                    Display_Timer_Timing(set_timer_hours, set_timer_minutes);
 
 
 			   }
@@ -475,6 +495,116 @@ static void Display_Works_Timing(void)
 
    }
 
+
+}
+
+/*
+*********************************************************************************************************
+*
+*	函 数 名: void Set_Timer_Timing_Lcd_Blink(void )
+*	功能说明: 设置的定时时间闪烁
+*	形    参: 无
+*	返 回 值: 无
+*
+*********************************************************************************************************
+*/
+static void Set_Timer_Timing_Lcd_Blink(void )
+{
+    if(gProcess_t.gTimer_set_timer < 30){//300ms
+
+	  glcd_t.number5_low =  gProcess_t.set_timer_timing_hours / 10 ;
+      glcd_t.number5_high =  gProcess_t.set_timer_timing_hours / 10 ;
+
+      glcd_t.number6_low  = gProcess_t.set_timer_timing_hours% 10; //
+      glcd_t.number6_high =  gProcess_t.set_timer_timing_hours % 10; //
+      
+       //dispaly minutes 
+      glcd_t.number7_low =   gProcess_t.set_timer_timing_minutes /10;
+      glcd_t.number7_high =   gProcess_t.set_timer_timing_minutes /10;
+
+      glcd_t.number8_low =   gProcess_t.set_timer_timing_minutes %10;
+      glcd_t.number8_high =   gProcess_t.set_timer_timing_minutes %10;
+
+
+    }
+	else if(gProcess_t.gTimer_set_timer > 29 && gProcess_t.gTimer_set_timer > 61 ){
+	  glcd_t.number5_low =  0x0A ;
+      glcd_t.number5_high =  0x0A ;
+
+      glcd_t.number6_low  =  0x0A; //
+      glcd_t.number6_high =  0x0A; //
+      
+       //dispaly minutes 
+      glcd_t.number7_low =   0x0A;
+      glcd_t.number7_high =   0x0A;
+
+      glcd_t.number8_low =   0x0A;
+      glcd_t.number8_high =   0x0A;
+
+
+	}
+	else{
+	 gProcess_t.gTimer_set_timer =0;
+
+    }
+
+}
+
+/*
+*********************************************************************************************************
+*
+*	函 数 名: void Dissplay_Timer_Timing(uint8_t hours,uint8_t minutes)
+*	功能说明: 到记时功能
+*	形    参: 无
+*	返 回 值: 无
+*
+*********************************************************************************************************
+*/
+static void Display_Timer_Timing(int8_t hours,int8_t minutes)
+{
+	 if(gProcess_t.gTimer_timer_Counter > 59){
+	    gProcess_t.gTimer_timer_Counter =0;
+		
+		minutes -- ;
+	
+	    if(minutes <  0 ){
+			 
+		   hours -- ;
+		   minutes =59;
+         }
+
+		
+		
+		 if(hours < 0 ){
+		 
+			
+			hours=0;
+			minutes=0;
+			gkey_t.key_power = power_off;
+			gkey_t.gTimer_power_off=0;
+			
+			
+	      }
+
+
+
+		 //display hours timing
+	     glcd_t.number5_low = hours / 10;
+		 glcd_t.number5_high = hours / 10;
+	 
+	 
+		 glcd_t.number6_low = hours  % 10;
+		 glcd_t.number6_high = hours % 10;
+		 
+	      //display minutes 
+		 glcd_t.number7_low = minutes / 10;
+		 glcd_t.number7_high = minutes / 10;
+		 
+							
+		 glcd_t.number8_low = minutes  % 10;
+		 glcd_t.number8_high = minutes % 10;
+		    
+     }
 
 }
 

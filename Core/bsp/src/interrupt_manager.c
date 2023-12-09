@@ -20,6 +20,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     glcd_t.gTimer_lcd_blink++;
     
 	glcd_t.gTimer_fan_10ms++;
+	gProcess_t.gTimer_set_timer ++;
 	
     if(tm1>9){ //10*10 = 100ms 
        tm1=0;
@@ -41,6 +42,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		gProcess_t.gTimer_run_one_mintue ++;
 		gkey_t.gTimer_power_off++;
 		gProcess_t.gTimer_works_counter++;
+		gProcess_t.gTimer_set_timer++;
 		
 		if(tm2 > 59){ //60s = 1 minutes
 			tm2 =0;
