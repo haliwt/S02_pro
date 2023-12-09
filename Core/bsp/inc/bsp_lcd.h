@@ -75,8 +75,10 @@ typedef struct _LCD_Ref{
 
      uint8_t number1_low;
 	 uint8_t number1_high;
+	 
 	 uint8_t number2_low;
 	 uint8_t number2_high;
+	 
 	 uint8_t number3_low;
 	 uint8_t number3_high;
 	 
@@ -95,9 +97,11 @@ typedef struct _LCD_Ref{
 	 uint8_t number8_low;
 	 uint8_t number8_high;
 
-	 uint8_t  gTimer_colon_ms;
+	 uint8_t gTimer_colon_ms;
 	 uint8_t gTimer_fan_10ms;
 	 uint8_t gTimer_error_times;
+	 uint8_t gTimer_lcd_blink;
+	 
 
 
 }lcd_ref;
@@ -111,7 +115,11 @@ void Lcd_Display_Detials(void);
 void LCD_Display_Wind_Icon_Handler(void);
 
 
+
+
 void Lcd_Display_Off(void);
+
+
 
 
 #endif 

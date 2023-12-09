@@ -22,6 +22,12 @@
 
 typedef struct {
 
+   uint8_t set_temp_confirm ;
+   uint8_t gdht11_temperature;
+
+   int8_t set_timer_timing_hours;
+   int8_t set_timer_timing_minutes;
+
 
    uint8_t gTimer_run_adc;
    uint8_t gTimer_run_dht11;
@@ -30,6 +36,10 @@ typedef struct {
    
    uint16_t gTimer_run_total;
    uint16_t gTimer_run_time_out;
+
+   uint8_t gTimer_works_counter;
+   uint8_t gTimer_display_works_hours;
+   uint8_t gTimer_display_works_minutes;
 
 
 }BSP_process_t;

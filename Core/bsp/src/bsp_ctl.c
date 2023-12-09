@@ -17,6 +17,7 @@ uint8_t (*fan_error_state)(void);
 
 void bsp_ctl_init(void)
 {
+
    gctl_t.fan_warning =0;
    gctl_t.ptc_warning = 0;
    gctl_t.ptc_flag=1;

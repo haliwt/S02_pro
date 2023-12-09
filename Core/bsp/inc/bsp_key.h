@@ -18,11 +18,14 @@ typedef enum{
 }power_state;
 
  typedef struct _key_fun{
-
+   
    uint8_t  key_power;
    uint8_t  key_mode;
    uint8_t  key_sound_flag;
    uint8_t  key_select;
+
+   uint8_t  set_temp_value;
+   uint8_t   key_mode_times;
    
    uint8_t  gTimer_key_temp_timing;
    uint8_t  gTimer_set_timer;

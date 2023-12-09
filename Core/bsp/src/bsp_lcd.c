@@ -157,6 +157,8 @@ static void LCD_Wind_Icon(void);
 static uint8_t Detecting_Fault_Code(void);
 static void LCD_Fault_Numbers_Code(void);
 static void LCD_Timer_Colon_Flicker(void);
+static void Lcd_Display_Temp_Digital_Blink(void);
+
 
 
 static uint8_t	ptc_error_flag ,fan_error_flag;
@@ -257,8 +259,13 @@ void Lcd_Display_Detials(void)
    LCD_Number_OneTwo_Humidity();
 
   /* display temperature  number 3, 4 */
+  if(gProcess_t.set_temp_confirm == 0){
+    LCD_Number_ThreeFour_Temperature();
+   }
+   else{ //display key input set up temperature value 
+     Lcd_Display_Temp_Digital_Blink();
 
-  LCD_Number_ThreeFour_Temperature();
+   }
 
 
   if(fault_code ==0){
@@ -299,7 +306,7 @@ void LCD_Number_OneTwo_Humidity(void)
   TM1723_Write_Display_Data(0xC4,(lcdNumber1_High[glcd_t.number1_high] + lcdNumber1_Low[glcd_t.number1_low]) & 0xff); //numbers : '1' addr: 0xC4
 
   //number '2'
-  TM1723_Write_Display_Data(0xC5,(lcdNumber2_High[glcd_t.number1_high] + lcdNumber2_Low[glcd_t.number1_low]) & 0xff); //numbers : '2' addr: 0xC5
+  TM1723_Write_Display_Data(0xC5,(lcdNumber2_High[glcd_t.number2_high] + lcdNumber2_Low[glcd_t.number2_low]) & 0xff); //numbers : '2' addr: 0xC5
 }
 /*****************************************************************************
  * 
@@ -312,10 +319,10 @@ void LCD_Number_OneTwo_Humidity(void)
 void LCD_Number_ThreeFour_Temperature(void)
 {
   //number '3' 
-  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[glcd_t.number1_high] + lcdNumber3_Low[glcd_t.number1_low] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[glcd_t.number3_high] + lcdNumber3_Low[glcd_t.number3_low] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
 
  //number '4' 
- TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[glcd_t.number1_high] + lcdNumber4_Low[glcd_t.number1_low] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
+ TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[glcd_t.number4_high] + lcdNumber4_Low[glcd_t.number4_low] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
 
 
 }
@@ -347,11 +354,15 @@ void LCD_Number_FiveSix_Hours(void)
    else{
 	  plasma_symbol = 0;
    }
-  //number '5' 
-  TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[glcd_t.number1_high] + lcdNumber5_Low[glcd_t.number1_low] + ptc_symbol ) & 0xff); //numbers : '3' addr: 0xC2
+  
+
+
+
+  //number '5' and 'ptc' icon
+  TM1723_Write_Display_Data(0xC9,(lcdNumber5_High[glcd_t.number5_high] + lcdNumber5_Low[glcd_t.number5_low] + ptc_symbol ) & 0xff); 
 
  //number '6' 
- TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[glcd_t.number1_high] + lcdNumber6_Low[glcd_t.number1_low] + plasma_symbol) & 0xff); //numbers : '4' 
+ TM1723_Write_Display_Data(0xCA,(lcdNumber6_High[glcd_t.number6_high] + lcdNumber6_Low[glcd_t.number6_low] + plasma_symbol) & 0xff); 
 
 }
 
@@ -381,10 +392,10 @@ static void LCD_Number_SevenEight_Minutes(void)
 	  }
 
 	   //number '7' ":"
-	  TM1723_Write_Display_Data(0xCB,(lcdNumber7_High[glcd_t.number1_high] + lcdNumber7_Low[glcd_t.number1_low] + Colon_Symbol ) & 0xff); //numbers : '1' addr: 0xC4
+	  TM1723_Write_Display_Data(0xCB,(lcdNumber7_High[glcd_t.number7_high] + lcdNumber7_Low[glcd_t.number7_low] + Colon_Symbol ) & 0xff); //numbers : '1' addr: 0xC4
 
 	  //number '8'
-	  TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[glcd_t.number1_high] + lcdNumber8_Low[glcd_t.number1_low] + ultrasonic_symbol) & 0xff); //numbers : '2' addr: 0xC
+	  TM1723_Write_Display_Data(0xCC,(lcdNumber8_High[glcd_t.number8_high] + lcdNumber8_Low[glcd_t.number8_low] + ultrasonic_symbol) & 0xff); //numbers : '2' addr: 0xC
 
 }
 
@@ -542,6 +553,54 @@ static void LCD_Timer_Colon_Flicker(void)
 
 }
 
+/*************************************************************************************
+	*
+	*Function Name: void Lcd_Display_Temp_Digital_Blink(void)
+	*Function : digital '3' '4' blink 3 times 
+	*Input Ref: temperature of value 
+	*Return Ref:NO
+	*
+*************************************************************************************/
+static void Lcd_Display_Temp_Digital_Blink(void)
+{
+    static uint8_t times_blink;
+	if(glcd_t.gTimer_lcd_blink  < 100){ //200ms
+
+          //number '3' 
+		  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[glcd_t.number3_high] + lcdNumber3_Low[glcd_t.number3_low] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+
+		 //number '4' 
+		 TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[glcd_t.number4_high] + lcdNumber4_Low[glcd_t.number4_low] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
+
+     }
+	 else if(glcd_t.gTimer_lcd_blink  > 99 && glcd_t.gTimer_lcd_blink  < 201){ //lef off
+
+		  //number '3' 
+		  TM1723_Write_Display_Data(0xC2,(lcdNumber3_High[0x0A] + lcdNumber3_Low[0x0A] + TEMP_Symbol ) & 0xff); //numbers : '3' addr: 0xC2
+
+		 //number '4' 
+		 TM1723_Write_Display_Data(0xC3,(lcdNumber4_High[0x0A] + lcdNumber4_Low[0x0A] + HUMI_Symbol) & 0xff); //numbers : '4' addr: 0xC3
+
+     }
+	 else{
+       times_blink ++ ;
+	   glcd_t.gTimer_lcd_blink =0;
+
+	 }
+
+
+	 if(times_blink > 3){
+
+	   times_blink =0 ;
+       gProcess_t.set_temp_confirm = 0; //设置温度的值，完成，清零，回到正常温湿度传感器显示值
+       gProcess_t.gTimer_run_dht11 = 70;
+
+	 }
+
+
+
+
+}
 /*************************************************************************************
 	*
 	*Function Name: static void LCD_DisplayNumber_OneTwo_Icon_Handler(void)

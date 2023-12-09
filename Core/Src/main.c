@@ -96,9 +96,10 @@ int main(void)
 
   MX_TIM17_Init(); //timer timing 
   MX_USART2_UART_Init();
+
+  /* USER CODE BEGIN 2 */
   delay_init(24);
   bsp_ctl_init();
-  /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 

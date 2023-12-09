@@ -5,6 +5,10 @@ BSP_process_t gProcess_t;
 static uint8_t Works_Time_Out(void);
 static void Mainboard_Action_Fun(void);
 static void Mainboard_Fun_Stop(void);
+static void Process_Dynamical_Action(void);
+static void Display_Works_Timing(void);
+
+
 
 
 uint8_t  fan_continue_flag;
@@ -48,7 +52,8 @@ void bsp_Idle(void)
 */
 void mainboard_process_handler(void)
 {
-    static uint8_t step_process,first_power_up;
+    static uint8_t step_process,first_power_up, compare_temp_value, compare_temp_value_flag;
+	static uint8_t  timer_timing_flag;
 
 	if( gkey_t.key_sound_flag == key_sound){
 		gkey_t.key_sound_flag =0;
@@ -61,6 +66,7 @@ void mainboard_process_handler(void)
       case power_off:
 
 	    step_process=0;
+		compare_temp_value_flag =0;
 	    LED_Mode_Off();
 	   
 	   
@@ -98,6 +104,9 @@ void mainboard_process_handler(void)
 		  case 0:
               //led on 
               first_power_up=1;
+		     gProcess_t.gTimer_display_works_minutes=0;
+		      gProcess_t.gTimer_display_works_hours =0;
+		      
 		      LED_Mode_On();
 		      LED_Power_On();
 		      Backlight_On();
@@ -113,14 +122,15 @@ void mainboard_process_handler(void)
 
 		  break;
 
-		  
-
-		  case 1: //run display
-
+		   case 1: //run display
+          
 		    if(gProcess_t.gTimer_run_display > 30){ //30*10 =300ms flash
-			     gProcess_t.gTimer_run_display=0;
+			    gProcess_t.gTimer_run_display=0;
 				 
-			     Lcd_Display_Detials();
+			    Lcd_Display_Detials();
+
+				Process_Dynamical_Action();
+				
  
             }
 
@@ -128,16 +138,82 @@ void mainboard_process_handler(void)
 
 		  case 2:   //run dht11 display 
 
-          if(gProcess_t.gTimer_run_dht11 > 36){
-		  	gProcess_t.gTimer_run_dht11 =0;
-	        Update_DHT11_Value();
+		  if(gkey_t.key_select == mode_set_temp){ //set up temperature value
+		    if(gkey_t.gTimer_key_temp_timing > 3){
+                 gkey_t.key_select = 0;
+				 compare_temp_value = gkey_t.set_temp_value;
+				 //lcd digitall '3''4' blink
+				 gProcess_t.set_temp_confirm = 1;
+				 compare_temp_value_flag=1;
+                 gkey_t.gTimer_key_temp_timing = 0;
+			}
 
-          }
+		  }
+		  else if(gProcess_t.set_temp_confirm ==0){
+
+			  if(gProcess_t.gTimer_run_dht11 > 36){
+			  	gProcess_t.gTimer_run_dht11 =0;
+		        Update_DHT11_Value();
+
+	           }
+
+			   if(compare_temp_value_flag ==1){
+                   
+				   if(compare_temp_value >= gProcess_t.gdht11_temperature){
+
+					  gctl_t.ptc_flag  =1 ; //open ptc
+				   }
+				   else{
+					  gctl_t.ptc_flag =0 ;  //close ptc 
+				   }
+
+			   }
+			   else{
+                    
+					if(gProcess_t.gdht11_temperature >40){ 
+						gctl_t.ptc_flag =0 ;  //close ptc 
+					}
+					else if(gProcess_t.gdht11_temperature <39){
+                        gctl_t.ptc_flag =1 ; //open ptc 
+                    }
+                }
+
+		  }
            step_process=3;
 		  
           break;
 
-		  case 3: //detected ptc temperature value and fan if fault
+		  case 3: //set timer timing value 
+               if(gkey_t.key_mode == mode_set_timer){
+			   	
+			   	   if(gkey_t.gTimer_set_timer > 3){
+
+                       gkey_t.key_mode=0;
+					   gkey_t.key_mode_times=0;
+
+				   }
+
+			   }
+			   else if(gkey_t.key_mode == mode_confirm){
+			   	     timer_timing_flag = 1;
+			   	
+
+			   }
+			   else if(timer_timing_flag == 1){
+
+
+
+			   }
+			   else{
+		          Display_Works_Timing();
+
+			   }
+
+		       step_process=4;
+		  break;
+
+
+		  case 4: //detected ptc temperature value and fan if fault
 
 		  if(gProcess_t.gTimer_run_adc > 10 && gProcess_t.gTimer_run_adc < 12){ //3 minutes 120s
 				
@@ -155,17 +231,17 @@ void mainboard_process_handler(void)
 
 		 }
 
-		  step_process=4;
+		  step_process=5;
 
 		  break;
 
-		  case 4: //check works times 
+		  case 5: //check works times 
 			  if(gProcess_t.gTimer_run_total > 119){ //120 minutes
 			       gProcess_t.gTimer_run_total =0;
 				   gProcess_t.gTimer_run_time_out=0;  //time out recoder start 10 minutes
 				   gProcess_t.gTimer_run_one_mintue =0;
 				   fan_continue_flag=0;
-				   step_process=5;
+				   step_process=6;
 			  
 		         
 			    }
@@ -176,7 +252,7 @@ void mainboard_process_handler(void)
 
 		  break;
 
-		  case 5: //works have a rest ten minutes
+		  case 6: //works have a rest ten minutes
 
 		       if(Works_Time_Out()==1){
 
@@ -185,7 +261,7 @@ void mainboard_process_handler(void)
 			   }
 			   else{
 
-			      step_process=5;
+			      step_process=6;
 
 			   }
 
@@ -279,11 +355,12 @@ static void Mainboard_Action_Fun(void)
 
 /*
 *********************************************************************************************************
+*
 *	函 数 名: static void Mainboard_Action_Fun(void)
-*	功能说明: 主板工作：功能动作输出
-*			 
+*	功能说明: 主板工作：功能动作输出			 
 *	形    参: 无
 *	返 回 值: 无
+*
 *********************************************************************************************************
 */
 static void Mainboard_Fun_Stop(void)
@@ -293,6 +370,110 @@ static void Mainboard_Fun_Stop(void)
    Ultrasonic_Pwm_Stop();
    Fan_Stop();
    Plasma_Off();
+
+
+}
+/*
+*********************************************************************************************************
+*
+*	函 数 名: void Process_Dynamical_Action(void)
+*	功能说明: 主板工作：功能动作输出			 
+*	形    参: 无
+*	返 回 值: 无
+*
+*********************************************************************************************************
+*/
+static void Process_Dynamical_Action(void)
+{
+	if(ptc_state() ==1){
+
+	  Ptc_On();
+
+	}
+	else{
+     Ptc_Off();
+
+	}
+
+	if(plasma_state() ==1){
+		
+       Plasma_On();
+
+    }
+	else{
+
+	   Plasma_Off();
+
+	}
+
+}
+
+/*
+*********************************************************************************************************
+*
+*	函 数 名: void Display_Works_Timing(void)
+*	功能说明: 显示设备工作的时间，时间最大值是 99个小时
+*	形    参: 无
+*	返 回 值: 无
+*
+*********************************************************************************************************
+*/
+static void Display_Works_Timing(void)
+{
+
+    if(gProcess_t.gTimer_works_counter > 59 ){
+
+	  gProcess_t.gTimer_works_counter=0;
+
+	  gProcess_t.gTimer_display_works_minutes++;
+
+	if( gProcess_t.gTimer_display_works_minutes > 59){ //1 hours
+		gProcess_t.gTimer_display_works_minutes=0;
+
+	     gProcess_t.gTimer_display_works_hours++;
+
+
+		glcd_t.number7_low = gProcess_t.gTimer_display_works_minutes / 10;
+		glcd_t.number7_high = gProcess_t.gTimer_display_works_minutes / 10;
+
+
+		glcd_t.number8_low = gProcess_t.gTimer_display_works_minutes  % 10;
+		glcd_t.number8_high = gProcess_t.gTimer_display_works_minutes % 10;
+
+		//display hours works
+
+
+        if(gProcess_t.gTimer_display_works_hours > 99){
+			gProcess_t.gTimer_display_works_hours=0;
+
+
+		}
+		
+		glcd_t.number5_low = gProcess_t.gTimer_display_works_hours / 10;
+		glcd_t.number5_high = gProcess_t.gTimer_display_works_hours / 10;
+
+
+		glcd_t.number6_low = gProcess_t.gTimer_display_works_hours  % 10;
+		glcd_t.number6_high = gProcess_t.gTimer_display_works_hours % 10;
+		
+
+	}
+    else{
+	 
+		  glcd_t.number7_low = gProcess_t.gTimer_display_works_minutes / 10;
+		  glcd_t.number7_high = gProcess_t.gTimer_display_works_minutes / 10;
+		
+						   
+		  glcd_t.number8_low = gProcess_t.gTimer_display_works_minutes	% 10;
+		  glcd_t.number8_high = gProcess_t.gTimer_display_works_minutes % 10;
+
+	  
+    }
+	 
+
+	
+
+   }
 
 
 }
