@@ -18,7 +18,10 @@
 #include "bsp_fan.h"
 #include "bsp_plasma.h"
 #include "bsp_ptc.h"
+#include "bsp_usart.h"
 
+#define ENABLE_INT()	__set_PRIMASK(0)	/* 使能全局中断 */
+#define DISABLE_INT()	__set_PRIMASK(1)	/* 禁止全局中断 */
 
 typedef struct {
 

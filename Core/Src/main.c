@@ -7,11 +7,11 @@
   * @attention
   *
   * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * 
+  * Pro:S02
+  * describe： displayPanel and mainbord is entirety 
+  *            not display of mcu . be used to one MCU 
+  * 
   *
   ******************************************************************************
   */

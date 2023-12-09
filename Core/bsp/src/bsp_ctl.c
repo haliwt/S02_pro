@@ -23,6 +23,7 @@ void bsp_ctl_init(void)
    gctl_t.ptc_flag=1;
    gctl_t.plasma_flag =1;
    gctl_t.ultrasoinc_flag =1;
+   UartVarInit();
    Ptc_State_Handler(Ptc_Default_Handler);
    Plasma_State_Handler(Plasma_Default_Handler);
    Ultrasonic_state_Handler(Ultrasonic_Default_Handler);
