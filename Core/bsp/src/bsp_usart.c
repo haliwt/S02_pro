@@ -378,130 +378,6 @@ void UartVarInit(void)
 
 /*
 *********************************************************************************************************
-*	函 数 名: bsp_SetUartParam
-*	功能说明: 配置串口的硬件参数（波特率，数据位，停止位，起始位，校验位，中断使能）适合于STM32- H7开发板
-*	形    参: Instance   USART_TypeDef类型结构体
-*             BaudRate   波特率
-*             Parity     校验类型，奇校验或者偶校验
-*             Mode       发送和接收模式使能
-*	返 回 值: 无
-*********************************************************************************************************
-*/
-#if 0
-void bsp_SetUartParam(USART_TypeDef *Instance,  uint32_t BaudRate, uint32_t Parity, uint32_t Mode)
-{
-	UART_HandleTypeDef UartHandle;	
-	
-	/*##-1- 配置串口硬件参数 ######################################*/
-	/* 异步串口模式 (UART Mode) */
-	/* 配置如下:
-	  - 字长    = 8 位
-	  - 停止位  = 1 个停止位
-	  - 校验    = 参数Parity
-	  - 波特率  = 参数BaudRate
-	  - 硬件流控制关闭 (RTS and CTS signals) */
-
-	UartHandle.Instance        = Instance;
-
-	UartHandle.Init.BaudRate   = BaudRate;
-	UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-	UartHandle.Init.StopBits   = UART_STOPBITS_1;
-	UartHandle.Init.Parity     = Parity;
-	UartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-	UartHandle.Init.Mode       = Mode;
-	UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-    
-	if (HAL_UART_Init(&UartHandle) != HAL_OK)
-	{
-		Error_Handler(__FILE__, __LINE__);
-	}
-}
-#endif 
-/*
-*********************************************************************************************************
-*	函 数 名: InitHardUart
-*	功能说明: 配置串口的硬件参数（波特率，数据位，停止位，起始位，校验位，中断使能）适合于STM32-H7开发板
-*	形    参: 无
-*	返 回 值: 无
-*********************************************************************************************************
-*/
-#if 0
-static void InitHardUart(void)
-{
-	GPIO_InitTypeDef  GPIO_InitStruct;
-
-
-#if UART1_FIFO_EN == 1		/* 串口1 */
-	/* 使能 GPIO TX/RX 时钟 */
-	USART1_TX_GPIO_CLK_ENABLE();
-	USART1_RX_GPIO_CLK_ENABLE();
-	
-	/* 使能 USARTx 时钟 */
-	USART1_CLK_ENABLE();	
-
-	/* 配置TX引脚 */
-	GPIO_InitStruct.Pin       = USART1_TX_PIN;
-	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull      = GPIO_PULLUP;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.Alternate = USART1_TX_AF;
-	HAL_GPIO_Init(USART1_TX_GPIO_PORT, &GPIO_InitStruct);	
-	
-	/* 配置RX引脚 */
-	GPIO_InitStruct.Pin = USART1_RX_PIN;
-	GPIO_InitStruct.Alternate = USART1_RX_AF;
-	HAL_GPIO_Init(USART1_RX_GPIO_PORT, &GPIO_InitStruct);
-
-	/* 配置NVIC the NVIC for UART */   
-	HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-  
-	/* 配置波特率、奇偶校验 */
-	bsp_SetUartParam(USART1,  UART1_BAUD, UART_PARITY_NONE, UART_MODE_TX_RX);
-
-	CLEAR_BIT(USART1->SR, USART_SR_TC);   /* 清除TC发送完成标志 */
-    CLEAR_BIT(USART1->SR, USART_SR_RXNE); /* 清除RXNE接收标志 */
-	// USART_CR1_PEIE | USART_CR1_RXNEIE
-	SET_BIT(USART1->CR1, USART_CR1_RXNEIE);	/* 使能PE. RX接受中断 */
-#endif
-
-#if UART2_FIFO_EN == 1		/* 串口2 */
-	/* 使能 GPIO TX/RX 时钟 */
-	USART2_TX_GPIO_CLK_ENABLE();
-	USART2_RX_GPIO_CLK_ENABLE();
-	
-	/* 使能 USARTx 时钟 */
-	USART2_CLK_ENABLE();	
-
-	/* 配置TX引脚 */
-	GPIO_InitStruct.Pin       = USART2_TX_PIN;
-	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull      = GPIO_PULLUP;
-	GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.Alternate = USART2_TX_AF;
-	HAL_GPIO_Init(USART2_TX_GPIO_PORT, &GPIO_InitStruct);	
-	
-	/* 配置RX引脚 */
-	GPIO_InitStruct.Pin = USART2_RX_PIN;
-	GPIO_InitStruct.Alternate = USART2_RX_AF;
-	HAL_GPIO_Init(USART2_RX_GPIO_PORT, &GPIO_InitStruct);
-
-	/* 配置NVIC the NVIC for UART */   
-	HAL_NVIC_SetPriority(USART2_IRQn, 0, 2);
-	HAL_NVIC_EnableIRQ(USART2_IRQn);
-  
-	/* 配置波特率、奇偶校验 */
-	bsp_SetUartParam(USART2,  UART2_BAUD, UART_PARITY_NONE, UART_MODE_RX);	// UART_MODE_TX_RX
-
-	CLEAR_BIT(USART2->SR, USART_SR_TC);   /* 清除TC发送完成标志 */
-    CLEAR_BIT(USART2->SR, USART_SR_RXNE); /* 清除RXNE接收标志 */
-	SET_BIT(USART2->CR1, USART_CR1_RXNEIE);	/* 使能PE. RX接受中断 */
-#endif
-}
-#endif 
-
-/*
-*********************************************************************************************************
 *	函 数 名: UartSend
 *	功能说明: 填写数据到UART发送缓冲区,并启动发送中断。中断处理函数发送完毕后，自动关闭发送中断
 *	形    参: 无
@@ -548,8 +424,8 @@ static void UartSend(UART_T *_pUart, uint8_t *_ucaBuf, uint16_t _usLen)
 		ENABLE_INT();
 	}
 
-	//SET_BIT(_pUart->uart->CR1, USART_CR1_TXEIE_TXFNFIE );	/* 使能发送中断（缓冲区空） */ USART_CR1_TXEIE_TXFNFIE 
-	SET_BIT(_pUart->uart->CR1, USART_CR1_TXEIE_TXFNFIE );
+	SET_BIT(_pUart->uart->CR1, USART_CR1_TXEIE_TXFNFIE );	/* 使能发送中断（缓冲区空） */ 
+	
 }
 
 /*
@@ -635,7 +511,7 @@ static void UartIRQ(UART_T *_pUart)
 	uint32_t cr3its     = READ_REG(_pUart->uart->CR3);
 	
 	/* 处理接收中断  */
-	if ((isrflags & USART_ISR_RXNE_RXFNE) != RESET) //USART_ISR_RXNE_RXFNE
+	if ((isrflags & USART_ISR_RXNE_RXFNE) != RESET)
 	{
 		/* 从串口接收数据寄存器读取数据存放到接收FIFO */
 		uint8_t ch;
@@ -663,14 +539,14 @@ static void UartIRQ(UART_T *_pUart)
 	}
 
 	/* 处理发送缓冲区空中断 */
-	if ( ((isrflags & USART_ISR_TXE_TXFNF) != RESET) && (cr1its & USART_CR1_TXEIE_TXFNFIE ) != RESET) //USART_ISR_TXE_TXFNF= USART_ISR_TXE_TXFNF
+	if ( ((isrflags & USART_ISR_TXE_TXFNF) != RESET) && (cr1its & USART_CR1_TXEIE_TXFNFIE) != RESET)//USART_CR1_TXEIE_TXFNFIE//USART_CR1_TXEIE
 	{
 		//if (_pUart->usTxRead == _pUart->usTxWrite)
 		if (_pUart->usTxCount == 0)
 		{
 			/* 发送缓冲区的数据已取完时， 禁止发送缓冲区空中断 （注意：此时最后1个数据还未真正发送完毕）*/
 			//USART_ITConfig(_pUart->uart, USART_IT_TXE, DISABLE);
-			CLEAR_BIT(_pUart->uart->CR1, USART_CR1_TXEIE_TXFNFIE );
+			CLEAR_BIT(_pUart->uart->CR1, USART_CR1_TXEIE_TXFNFIE);
 
 			/* 使能数据发送完毕中断 */
 			//USART_ITConfig(_pUart->uart, USART_IT_TC, ENABLE);
@@ -699,7 +575,7 @@ static void UartIRQ(UART_T *_pUart)
 		{
 			/* 如果发送FIFO的数据全部发送完毕，禁止数据发送完毕中断 */
 			//USART_ITConfig(_pUart->uart, USART_IT_TC, DISABLE);
-			CLEAR_BIT(_pUart->uart->CR1, USART_CR1_TCIE);
+			CLEAR_BIT(_pUart->uart->CR1, USART_CR1_TCIE);///*!< USART_CR1_TCIE-》Transmission Complete Interrupt Enable */
 
 			/* 回调函数, 一般用来处理RS485通信，将RS485芯片设置为接收模式，避免抢占总线 */
 			if (_pUart->SendOver)
@@ -723,6 +599,32 @@ static void UartIRQ(UART_T *_pUart)
 			_pUart->usTxCount--;
 		}
 	}
+	
+	/* 清除中断标志 */
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_PEF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_FEF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_NEF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_OREF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_IDLEF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_TCF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_LBDF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_CTSF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_CMF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_WUF);
+	SET_BIT(_pUart->uart->ICR, UART_CLEAR_TXFECF);
+	
+//	  *            @arg UART_CLEAR_PEF: Parity Error Clear Flag
+//  *            @arg UART_CLEAR_FEF: Framing Error Clear Flag
+//  *            @arg UART_CLEAR_NEF: Noise detected Clear Flag
+//  *            @arg UART_CLEAR_OREF: OverRun Error Clear Flag
+//  *            @arg UART_CLEAR_IDLEF: IDLE line detected Clear Flag
+//  *            @arg UART_CLEAR_TCF: Transmission Complete Clear Flag
+//  *            @arg UART_CLEAR_LBDF: LIN Break Detection Clear Flag
+//  *            @arg UART_CLEAR_CTSF: CTS Interrupt Clear Flag
+//  *            @arg UART_CLEAR_RTOF: Receiver Time Out Clear Flag
+//  *            @arg UART_CLEAR_CMF: Character Match Clear Flag
+//  *            @arg.UART_CLEAR_WUF:  Wake Up from stop mode Clear Flag
+//  *            @arg UART_CLEAR_TXFECF: TXFIFO empty Clear Flag	
 }
 
 /*
@@ -747,47 +649,7 @@ void USART2_IRQHandler(void)
 }
 #endif
 
-#if UART3_FIFO_EN == 1
-void USART3_IRQHandler(void)
-{
-	UartIRQ(&g_tUart3);
-}
-#endif
 
-#if UART4_FIFO_EN == 1
-void UART4_IRQHandler(void)
-{
-	UartIRQ(&g_tUart4);
-}
-#endif
-
-#if UART5_FIFO_EN == 1
-void UART5_IRQHandler(void)
-{
-	UartIRQ(&g_tUart5);
-}
-#endif
-
-#if UART6_FIFO_EN == 1
-void USART6_IRQHandler(void)
-{
-	UartIRQ(&g_tUart6);
-}
-#endif
-
-#if UART7_FIFO_EN == 1
-void UART7_IRQHandler(void)
-{
-	UartIRQ(&g_tUart7);
-}
-#endif
-
-#if UART8_FIFO_EN == 1
-void UART8_IRQHandler(void)
-{
-	UartIRQ(&g_tUart8);
-}
-#endif
 
 /*
 *********************************************************************************************************
@@ -799,20 +661,24 @@ void UART8_IRQHandler(void)
 */
 int fputc(int ch, FILE *f)
 {
-#if 1	/* 将需要printf的字符通过串口中断FIFO发送出去，printf函数会立即返回 */
-	comSendChar(COM1, ch);
-	
-	return ch;
+#if 0	/* 将需要printf的字符通过串口中断FIFO发送出去，printf函数会立即返回 */
+		//comSendChar(COM1, ch);
+		  comSendChar(COM2, ch);
+
+		
+		return ch;
 #else	/* 采用阻塞方式发送每个字符,等待数据发送完毕 */
-	/* 写一个字节到USART1 */
-	USART1->DR = ch;
-	
-	/* 等待发送结束 */
-	while((USART1->SR & USART_SR_TC) == 0)
-	{}
-	
-	return ch;
+		/* 写一个字节到USART1 */
+		//USART1->TDR = ch;
+		USART2 ->TDR = ch;
+		
+		/* 等待发送结束 */
+		while((USART1->ISR & USART_ISR_TC) == 0)
+		{}
+		
+		return ch;
 #endif
+
 }
 
 /*
@@ -827,18 +693,19 @@ int fgetc(FILE *f)
 {
 
 #if 1	/* 从串口接收FIFO中取1个数据, 只有取到数据才返回 */
-	uint8_t ucData;
-
-	while(comGetChar(COM1, &ucData) == 0);
-
-	return ucData;
+		uint8_t ucData;
+	
+		while(comGetChar(COM2, &ucData) == 0);
+	
+		return ucData;
 #else
-	/* 等待接收到数据 */
-	while((USART1->SR & USART_SR_RXNE) == 0)
-	{}
-
-	return (int)USART1->DR;
+		/* 等待接收到数据 */
+		while((USART1->ISR & USART_ISR_RXNE) == 0)
+		{}
+	
+		return (int)USART1->RDR;
 #endif
+
 }
 
 
