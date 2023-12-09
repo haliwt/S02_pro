@@ -509,19 +509,19 @@ static void LCD_Fault_Numbers_Code(void)
 static void LCD_Wind_Icon(void)
 {
 
-   if(glcd_t.gTimer_fan_10ms >9 && glcd_t.gTimer_fan_10ms<20){ //open 
+   if(glcd_t.gTimer_fan_blink >9 && glcd_t.gTimer_fan_blink<20){ //open 
 		
 	   TM1723_Write_Display_Data(0xCE,T16_WIND_SPEED_ONE+T17_WIND_SPEED_TWO+T15+T9+T13);//display  wind icon
 	   TM1723_Write_Display_Data(0xCF,T18_WIND_SPEED_FULL+T11);//display  wind icon	
 	}
-    else if(glcd_t.gTimer_fan_10ms <10){ //close
+    else if(glcd_t.gTimer_fan_blink <10){ //close
 		
 	   TM1723_Write_Display_Data(0xCE,T16_WIND_SPEED_ONE+T17_WIND_SPEED_TWO+T15 +T10+T12+T14 );//display  wind icon
 	   TM1723_Write_Display_Data(0xCF,T18_WIND_SPEED_FULL);//display  wind icon	
 
 	}
-	else if(glcd_t.gTimer_fan_10ms > 19){
-		glcd_t.gTimer_fan_10ms=0;
+	else if(glcd_t.gTimer_fan_blink > 19){
+		glcd_t.gTimer_fan_blink=0;
 	}
 	  
 }
@@ -536,18 +536,18 @@ static void LCD_Wind_Icon(void)
 *****************************************************************************/
 static void LCD_Timer_Colon_Flicker(void)
 {
-   if(glcd_t.gTimer_colon_ms < 1){
+   if(glcd_t.gTimer_colon_blink < 1){
 
         Colon_Symbol = 0x01;
    }
-   else if(glcd_t.gTimer_colon_ms >0 && glcd_t.gTimer_colon_ms < 2){
+   else if(glcd_t.gTimer_colon_blink >0 && glcd_t.gTimer_colon_blink < 2){
 
       Colon_Symbol = 0x0;
 
    }
-   else if(glcd_t.gTimer_colon_ms ==2 || glcd_t.gTimer_colon_ms >2){
+   else if(glcd_t.gTimer_colon_blink ==2 || glcd_t.gTimer_colon_blink >2){
 
-      glcd_t.gTimer_colon_ms =0;
+      glcd_t.gTimer_colon_blink =0;
 
    }
 

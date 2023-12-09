@@ -129,8 +129,8 @@ void mainboard_process_handler(void)
 
 		   case 1: // normal all content display
           
-		    if(gProcess_t.gTimer_run_display > 30){ //30*10 =300ms flash
-			    gProcess_t.gTimer_run_display=0;
+		    if(gProcess_t.gTimer_normal_display_lcd > 30){ //30*10 =300ms flash
+			    gProcess_t.gTimer_normal_display_lcd=0;
 				 
 			    Lcd_Display_Detials();
 
@@ -193,7 +193,7 @@ void mainboard_process_handler(void)
 			   	
                    Set_Timer_Timing_Lcd_Blink();
 
-				   if(gkey_t.gTimer_set_timer > 3){
+				   if(gkey_t.gTimer_set_timer_blink > 3){
 
                        gkey_t.key_mode=0;
 					   gkey_t.key_mode_times=0;
@@ -510,7 +510,7 @@ static void Display_Works_Timing(void)
 */
 static void Set_Timer_Timing_Lcd_Blink(void )
 {
-    if(gProcess_t.gTimer_set_timer < 30){//300ms
+    if(gProcess_t.gTimer_set_timer_blink < 30){//300ms
 
 	  glcd_t.number5_low =  gProcess_t.set_timer_timing_hours / 10 ;
       glcd_t.number5_high =  gProcess_t.set_timer_timing_hours / 10 ;
@@ -527,7 +527,7 @@ static void Set_Timer_Timing_Lcd_Blink(void )
 
 
     }
-	else if(gProcess_t.gTimer_set_timer > 29 && gProcess_t.gTimer_set_timer > 61 ){
+	else if(gProcess_t.gTimer_set_timer_blink > 29 && gProcess_t.gTimer_set_timer_blink > 61 ){
 	  glcd_t.number5_low =  0x0A ;
       glcd_t.number5_high =  0x0A ;
 
@@ -544,7 +544,7 @@ static void Set_Timer_Timing_Lcd_Blink(void )
 
 	}
 	else{
-	 gProcess_t.gTimer_set_timer =0;
+	 gProcess_t.gTimer_set_timer_blink =0;
 
     }
 

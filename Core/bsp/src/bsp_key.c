@@ -118,7 +118,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
                   glcd_t.number8_low =   gProcess_t.set_timer_timing_minutes %10;
                   glcd_t.number8_high =   gProcess_t.set_timer_timing_minutes %10;
                  
-                 gkey_t.gTimer_set_timer =0;
+                 gkey_t.gTimer_set_timer_blink =0;
             }
          
        }
@@ -180,7 +180,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
                   glcd_t.number8_low =  gProcess_t.set_timer_timing_minutes %10;
                   glcd_t.number8_high =   gProcess_t.set_timer_timing_minutes %10;
 
-                 gkey_t.gTimer_set_timer =0;
+                 gkey_t.gTimer_set_timer_blink =0;
 
          break;
  

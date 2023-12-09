@@ -31,7 +31,7 @@ typedef struct {
 
    uint8_t gTimer_run_adc;
    uint8_t gTimer_run_dht11;
-   uint8_t gTimer_run_display;
+   uint8_t gTimer_normal_display_lcd;
    uint8_t gTimer_run_one_mintue ;
    
    uint16_t gTimer_run_total;
@@ -41,7 +41,7 @@ typedef struct {
    uint8_t gTimer_display_works_hours;
    uint8_t gTimer_display_works_minutes;
    uint8_t gTimer_timer_Counter;
-   uint8_t gTimer_set_timer ;
+   uint8_t gTimer_set_timer_blink ;
 
 
 }BSP_process_t;

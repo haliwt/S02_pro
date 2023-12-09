@@ -28,7 +28,7 @@ typedef enum{
    uint8_t   key_mode_times;
    
    uint8_t  gTimer_key_temp_timing;
-   uint8_t  gTimer_set_timer;
+   uint8_t  gTimer_set_timer_blink;
    uint8_t  gTimer_power_off;
 	
 
